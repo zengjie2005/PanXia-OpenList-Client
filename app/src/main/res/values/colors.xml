@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark_bg">#FF0E1218</color>
+    <color name="dark_surface">#FF151B23</color>
+    <color name="dark_surface2">#FF1E2631</color>
+    <color name="dark_text">#FFEDF2F9</color>
+    <color name="dark_dim">#FF8895A6</color>
+    <color name="dark_accent">#FF5B8DFF</color>
+    <color name="dark_accent_deep">#FF3E6FE8</color>
+    <color name="dark_accent_soft">#335B8DFF</color>
+    <color name="dark_accent_text">#FFFFFFFF</color>
+    <color name="dark_border">#FF232C38</color>
+    <color name="dark_danger">#FFFF6B6B</color>
+    <color name="dark_ok">#FF3DDC97</color>
+
+    <color name="light_bg">#FFF4F6FB</color>
+    <color name="light_surface">#FFFFFFFF</color>
+    <color name="light_surface2">#FFEDF1F8</color>
+    <color name="light_text">#FF111823</color>
+    <color name="light_dim">#FF6B7A8D</color>
+    <color name="light_accent">#FF2F6BF0</color>
+    <color name="light_accent_deep">#FF1E4FCC</color>
+    <color name="light_accent_soft">#1F2F6BF0</color>
+    <color name="light_accent_text">#FFFFFFFF</color>
+    <color name="light_border">#FFE2E8F2</color>
+    <color name="light_danger">#FFD92D20</color>
+    <color name="light_ok">#FF0E9F6E</color>
+
+    <color name="folder_tint">#FF6E9BF7</color>
+    <color name="folder_tint_back">#FF4E7BD9</color>
+    <color name="file_tint">#FF9AA8BA</color>
+</resources>

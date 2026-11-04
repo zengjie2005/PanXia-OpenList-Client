@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppThemeDark" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/dark_bg</item>
+        <item name="android:statusBarColor">@color/dark_surface</item>
+        <item name="android:navigationBarColor">@color/dark_surface</item>
+        <item name="android:colorAccent">@color/dark_accent</item>
+        <item name="android:textColorPrimary">@color/dark_text</item>
+        <item name="android:textColorSecondary">@color/dark_dim</item>
+        <item name="android:textColorHint">@color/dark_dim</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorBackground">@color/dark_bg</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="olBg">@color/dark_bg</item>
+        <item name="olSurface">@color/dark_surface</item>
+        <item name="olSurface2">@color/dark_surface2</item>
+        <item name="olText">@color/dark_text</item>
+        <item name="olDim">@color/dark_dim</item>
+        <item name="olAccent">@color/dark_accent</item>
+        <item name="olAccentDeep">@color/dark_accent_deep</item>
+        <item name="olAccentSoft">@color/dark_accent_soft</item>
+        <item name="olAccentText">@color/dark_accent_text</item>
+        <item name="olBorder">@color/dark_border</item>
+        <item name="olDanger">@color/dark_danger</item>
+        <item name="olOk">@color/dark_ok</item>
+    </style>
+
+    <style name="AppThemeLight" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/light_bg</item>
+        <item name="android:statusBarColor">@color/light_surface</item>
+        <item name="android:navigationBarColor">@color/light_surface</item>
+        <item name="android:colorAccent">@color/light_accent</item>
+        <item name="android:textColorPrimary">@color/light_text</item>
+        <item name="android:textColorSecondary">@color/light_dim</item>
+        <item name="android:textColorHint">@color/light_dim</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:colorBackground">@color/light_bg</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="olBg">@color/light_bg</item>
+        <item name="olSurface">@color/light_surface</item>
+        <item name="olSurface2">@color/light_surface2</item>
+        <item name="olText">@color/light_text</item>
+        <item name="olDim">@color/light_dim</item>
+        <item name="olAccent">@color/light_accent</item>
+        <item name="olAccentDeep">@color/light_accent_deep</item>
+        <item name="olAccentSoft">@color/light_accent_soft</item>
+        <item name="olAccentText">@color/light_accent_text</item>
+        <item name="olBorder">@color/light_border</item>
+        <item name="olDanger">@color/light_danger</item>
+        <item name="olOk">@color/light_ok</item>
+    </style>
+
+    <!-- 顶栏 / 工具条上的图标按钮 -->
+    <style name="IconButton">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:padding">11dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">@drawable/bg_ripple</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:tint">?attr/olText</item>
+    </style>
+
+    <style name="TitleText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.012</item>
+        <item name="android:textColor">?attr/olText</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">middle</item>
+    </style>
+
+    <style name="SubText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">?attr/olDim</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- 列表行：文件名 + 次要信息 -->
+    <style name="RowName">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:letterSpacing">0.006</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">?attr/olText</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="RowMeta">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">?attr/olDim</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <!-- 设置页的分组小标题 -->
+    <style name="SectionLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textColor">?attr/olAccent</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="FieldLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">7dp</item>
+        <item name="android:letterSpacing">0.05</item>
+        <item name="android:textColor">?attr/olDim</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="FieldEdit">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/bg_input</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">?attr/olText</item>
+        <item name="android:textColorHint">?attr/olDim</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="PrimaryButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:background">@drawable/btn_primary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:textColor">?attr/olAccentText</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="GhostButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/btn_ghost</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:textColor">?attr/olText</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="BottomItem">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_ripple</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="BottomIcon">
+        <item name="android:layout_width">22dp</item>
+        <item name="android:layout_height">22dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:tint">?attr/olText</item>
+    </style>
+
+    <style name="BottomLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textColor">?attr/olDim</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+</resources>

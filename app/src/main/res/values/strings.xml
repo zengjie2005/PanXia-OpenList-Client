@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">盘匣</string>
+    <string name="login_title">盘匣</string>
+    <string name="login_sub">自建网盘客户端</string>
+    <string name="hint_server">服务器地址，如 192.168.1.10:5244</string>
+    <string name="hint_user">用户名</string>
+    <string name="hint_pass">密码</string>
+    <string name="login">登录</string>
+    <string name="test_conn">测试连接</string>
+    <string name="remember">记住密码</string>
+    <string name="insecure">忽略证书错误（自签名 https）</string>
+    <string name="settings">设置</string>
+    <string name="upload">上传</string>
+    <string name="new_folder">新建文件夹</string>
+    <string name="sort">排序</string>
+    <string name="download">下载</string>
+    <string name="delete">删除</string>
+    <string name="rename">重命名</string>
+    <string name="copy_to">复制到…</string>
+    <string name="move_to">移动到…</string>
+    <string name="detail">详情</string>
+    <string name="copy_link">复制直链</string>
+    <string name="select_all">全选</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+</resources>

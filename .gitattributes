@@ -1,0 +1,11 @@
+# 换行统一管理：跨平台构建必需
+* text=auto
+
+# 脚本对换行敏感
+gradlew text eol=lf
+gradlew.bat text eol=crlf
+
+# 二进制
+*.jar binary
+*.png binary
+*.webp binary

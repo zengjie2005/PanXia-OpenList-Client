@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_row"
+    android:gravity="center_vertical"
+    android:minHeight="64dp"
+    android:orientation="horizontal"
+    android:paddingLeft="8dp"
+    android:paddingRight="2dp">
+
+    <ImageView
+        android:id="@+id/tvCheck"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginRight="2dp"
+        android:contentDescription="选择"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_radio"
+        android:tint="?attr/olDim"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="13dp"
+        android:contentDescription="图标"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_file" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/tvName"
+            style="@style/RowName" />
+
+        <TextView
+            android:id="@+id/tvMeta"
+            style="@style/RowMeta" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btnMore"
+        android:layout_width="46dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_ripple"
+        android:clickable="true"
+        android:contentDescription="更多操作"
+        android:focusable="true"
+        android:padding="11dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_more"
+        android:tint="?attr/olDim" />
+</LinearLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 13+ 主题图标用的单色前景：只保留轮廓，由系统着色 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M33,36 H46.5 L51,42 H75 A6,6 0 0 1 81,48 V70 A6,6 0 0 1 75,76 H33 A6,6 0 0 1 27,70 V42 A6,6 0 0 1 33,36 Z" />
+</vector>

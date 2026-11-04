@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/olBg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/olSurface"
+        android:gravity="center_vertical"
+        android:minHeight="56dp"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            style="@style/IconButton"
+            android:contentDescription="返回"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="middle"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.012"
+            android:singleLine="true"
+            android:text="选择目标目录"
+            android:textColor="?attr/olText"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/btnPick"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_chip_on"
+            android:gravity="center"
+            android:letterSpacing="0.02"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="选定此处"
+            android:textColor="?attr/olAccent"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/olBorder" />
+
+    <TextView
+        android:id="@+id/tvPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/olSurface2"
+        android:ellipsize="start"
+        android:letterSpacing="0.02"
+        android:paddingLeft="16dp"
+        android:paddingTop="9dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="9dp"
+        android:singleLine="true"
+        android:text="/"
+        android:textColor="?attr/olDim"
+        android:textSize="12sp" />
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent"
+        android:paddingLeft="6dp"
+        android:paddingTop="4dp"
+        android:paddingRight="6dp"
+        android:paddingBottom="10dp" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone" />
+</LinearLayout>

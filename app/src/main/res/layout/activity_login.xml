@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/olBg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="26dp"
+        android:paddingTop="64dp"
+        android:paddingRight="26dp"
+        android:paddingBottom="36dp">
+
+        <ImageView
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.06"
+            android:text="@string/login_title"
+            android:textColor="?attr/olText"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0.03"
+            android:text="@string/login_sub"
+            android:textColor="?attr/olDim"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:id="@+id/boxPick"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_input"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="12dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvPick"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:textColor="?attr/olText"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginLeft="8dp"
+                android:contentDescription="展开"
+                android:rotation="90"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_chevron"
+                android:tint="?attr/olDim" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/lblServer"
+            style="@style/FieldLabel"
+            android:layout_marginTop="34dp"
+            android:text="服务器地址" />
+
+        <EditText
+            android:id="@+id/etServer"
+            style="@style/FieldEdit"
+            android:hint="@string/hint_server"
+            android:imeOptions="actionNext"
+            android:inputType="textUri" />
+
+        <TextView
+            style="@style/FieldLabel"
+            android:text="用户名" />
+
+        <EditText
+            android:id="@+id/etUser"
+            style="@style/FieldEdit"
+            android:hint="@string/hint_user"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+        <TextView
+            style="@style/FieldLabel"
+            android:text="密码" />
+
+        <EditText
+            android:id="@+id/etPass"
+            style="@style/FieldEdit"
+            android:hint="@string/hint_pass"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword" />
+
+        <Switch
+            android:id="@+id/swRemember"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp"
+            android:checked="true"
+            android:text="@string/remember"
+            android:textColor="?attr/olText"
+            android:textSize="14sp" />
+
+        <Switch
+            android:id="@+id/swInsecure"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/insecure"
+            android:textColor="?attr/olText"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:textColor="?attr/olDanger"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            style="@style/PrimaryButton"
+            android:layout_marginTop="20dp"
+            android:text="@string/login" />
+
+        <Button
+            android:id="@+id/btnTest"
+            style="@style/GhostButton"
+            android:layout_marginTop="12dp"
+            android:text="@string/test_conn" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:letterSpacing="0.02"
+            android:lineSpacingExtra="4dp"
+            android:text="支持 http:// 或 https:// + 域名/IP + 端口\n凭据仅保存在本机"
+            android:textColor="?attr/olDim"
+            android:textSize="11sp" />
+    </LinearLayout>
+</ScrollView>

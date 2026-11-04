@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/olBg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/olSurface"
+        android:gravity="center_vertical"
+        android:minHeight="56dp"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            style="@style/IconButton"
+            android:contentDescription="返回"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.012"
+            android:text="@string/settings"
+            android:textColor="?attr/olText"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/olBorder" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="40dp">
+
+            <TextView
+                style="@style/SectionLabel"
+                android:text="连接" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:text="当前服务器" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input"
+                android:gravity="center_vertical"
+                android:minHeight="56dp"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:paddingRight="8dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/tvServerName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="middle"
+                        android:fontFamily="sans-serif-medium"
+                        android:singleLine="true"
+                        android:textColor="?attr/olText"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvServerBase"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:ellipsize="middle"
+                        android:singleLine="true"
+                        android:textColor="?attr/olDim"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnServers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="切换 / 管理"
+                    android:textColor="?attr/olText"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/FieldLabel"
+                android:text="用户名" />
+
+            <EditText
+                android:id="@+id/etUser"
+                style="@style/FieldEdit"
+                android:hint="@string/hint_user"
+                android:inputType="text" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:text="密码（留空则沿用已保存的密码）" />
+
+            <EditText
+                android:id="@+id/etPass"
+                style="@style/FieldEdit"
+                android:hint="••••••••"
+                android:inputType="textPassword" />
+
+            <Switch
+                android:id="@+id/swInsecure"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/insecure"
+                android:textColor="?attr/olText"
+                android:textSize="14sp" />
+
+            <TextView
+                style="@style/SectionLabel"
+                android:text="外观" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:text="主题" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/chipThemeFollow"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:letterSpacing="0.02"
+                    android:text="跟随系统"
+                    android:textColor="?attr/olText"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/chipThemeLight"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:letterSpacing="0.02"
+                    android:text="浅色"
+                    android:textColor="?attr/olText"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/chipThemeDark"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:letterSpacing="0.02"
+                    android:text="深色"
+                    android:textColor="?attr/olText"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/swHaptic"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:checked="true"
+                android:text="按键触感反馈（震动）"
+                android:textColor="?attr/olText"
+                android:textSize="14sp" />
+
+            <TextView
+                style="@style/SectionLabel"
+                android:text="浏览" />
+
+            <Switch
+                android:id="@+id/swHidden"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="4dp"
+                android:text="显示隐藏文件（以 . 开头）"
+                android:textColor="?attr/olText"
+                android:textSize="14sp" />
+
+            <TextView
+                style="@style/FieldLabel"
+                android:text="默认排序" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/chipName"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:letterSpacing="0.02"
+                    android:text="名称"
+                    android:textColor="?attr/olText"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/chipSize"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:letterSpacing="0.02"
+                    android:text="大小"
+                    android:textColor="?attr/olText"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/chipTime"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:letterSpacing="0.02"
+                    android:text="时间"
+                    android:textColor="?attr/olText"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/swDesc"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="倒序排列"
+                android:textColor="?attr/olText"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnSave"
+                style="@style/PrimaryButton"
+                android:layout_marginTop="28dp"
+                android:text="保存并重新连接" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                style="@style/GhostButton"
+                android:layout_marginTop="12dp"
+                android:text="退出登录" />
+
+            <TextView
+                android:id="@+id/tvAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:gravity="center"
+                android:letterSpacing="0.02"
+                android:lineSpacingExtra="4dp"
+                android:text="盘匣 1.0\n作者 zhj\n兼容 OpenList v4 API\n凭据仅保存在本机，不上传任何服务器"
+                android:textColor="?attr/olDim"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/olBg"
+    android:orientation="vertical">
+
+    <!-- 顶部栏 -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/olSurface"
+        android:gravity="center_vertical"
+        android:minHeight="56dp"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            style="@style/IconButton"
+            android:contentDescription="返回"
+            android:src="@drawable/ic_back" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingRight="6dp">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                style="@style/TitleText"
+                android:text="盘匣" />
+
+            <TextView
+                android:id="@+id/tvSub"
+                style="@style/SubText"
+                android:text="" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnSearch"
+            style="@style/IconButton"
+            android:contentDescription="筛选"
+            android:src="@drawable/ic_search" />
+
+        <ImageView
+            android:id="@+id/btnRefresh"
+            style="@style/IconButton"
+            android:contentDescription="刷新"
+            android:src="@drawable/ic_refresh" />
+
+        <ImageView
+            android:id="@+id/btnMore"
+            style="@style/IconButton"
+            android:contentDescription="更多"
+            android:src="@drawable/ic_more" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/olBorder" />
+
+    <!-- 本地筛选 -->
+    <LinearLayout
+        android:id="@+id/rowSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/olBg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="14dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_input"
+            android:hint="在当前目录中筛选"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:singleLine="true"
+            android:textColor="?attr/olText"
+            android:textColorHint="?attr/olDim"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/btnSearchClose"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/bg_ripple"
+            android:clickable="true"
+            android:contentDescription="关闭筛选"
+            android:focusable="true"
+            android:padding="11dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_close"
+            android:tint="?attr/olDim" />
+    </LinearLayout>
+
+    <!-- 多选操作栏 -->
+    <LinearLayout
+        android:id="@+id/barSel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="?attr/olSurface2"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="14dp"
+        android:paddingRight="6dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvSelCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:letterSpacing="0.03"
+            android:text="已选 0 项"
+            android:textColor="?attr/olText"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/btnSelAll"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_ripple"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/select_all"
+            android:textColor="?attr/olAccent"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/btnSelCopy"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_ripple"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="复制"
+            android:textColor="?attr/olText"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/btnSelMove"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_ripple"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="移动"
+            android:textColor="?attr/olText"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/btnSelDel"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_ripple"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/delete"
+            android:textColor="?attr/olDanger"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/btnSelCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_ripple"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/cancel"
+            android:textColor="?attr/olDim"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- 面包屑 -->
+    <HorizontalScrollView
+        android:id="@+id/scrollCrumb"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="?attr/olBg"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/crumb"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp" />
+    </HorizontalScrollView>
+
+    <!-- 文件列表 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.zhj.panxia.PullRefreshLayout
+            android:id="@+id/pull"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:listSelector="@android:color/transparent"
+                android:paddingLeft="6dp"
+                android:paddingTop="2dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="8dp"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbars="vertical" />
+        </com.zhj.panxia.PullRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="84dp"
+                android:layout_height="84dp"
+                android:alpha="0.5"
+                android:contentDescription="空文件夹"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_empty"
+                android:tint="?attr/olDim" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:letterSpacing="0.04"
+                android:text="这里什么都没有"
+                android:textColor="?attr/olText"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="点下方「上传」放点东西进来"
+                android:textColor="?attr/olDim"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/olBorder" />
+
+    <!-- 底部操作栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/olSurface"
+        android:orientation="horizontal"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp">
+
+        <LinearLayout
+            android:id="@+id/btnUpload"
+            style="@style/BottomItem">
+
+            <ImageView
+                style="@style/BottomIcon"
+                android:contentDescription="@string/upload"
+                android:src="@drawable/ic_upload" />
+
+            <TextView
+                style="@style/BottomLabel"
+                android:text="@string/upload" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnMkdir"
+            style="@style/BottomItem">
+
+            <ImageView
+                style="@style/BottomIcon"
+                android:contentDescription="@string/new_folder"
+                android:src="@drawable/ic_newfolder" />
+
+            <TextView
+                style="@style/BottomLabel"
+                android:text="@string/new_folder" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnSort"
+            style="@style/BottomItem">
+
+            <ImageView
+                style="@style/BottomIcon"
+                android:contentDescription="@string/sort"
+                android:src="@drawable/ic_sort" />
+
+            <TextView
+                style="@style/BottomLabel"
+                android:text="@string/sort" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnSettings"
+            style="@style/BottomItem">
+
+            <ImageView
+                style="@style/BottomIcon"
+                android:contentDescription="@string/settings"
+                android:src="@drawable/ic_settings" />
+
+            <TextView
+                style="@style/BottomLabel"
+                android:text="@string/settings" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="OLTheme">
+        <attr name="olBg" format="color" />
+        <attr name="olSurface" format="color" />
+        <attr name="olSurface2" format="color" />
+        <attr name="olText" format="color" />
+        <attr name="olDim" format="color" />
+        <attr name="olAccent" format="color" />
+        <attr name="olAccentDeep" format="color" />
+        <attr name="olAccentSoft" format="color" />
+        <attr name="olAccentText" format="color" />
+        <attr name="olBorder" format="color" />
+        <attr name="olDanger" format="color" />
+        <attr name="olOk" format="color" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 文件夹主体 -->
+    <path
+        android:pathData="M33,36 H46.5 L51,42 H75 A6,6 0 0 1 81,48 V70 A6,6 0 0 1 75,76 H33 A6,6 0 0 1 27,70 V42 A6,6 0 0 1 33,36 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="54"
+                android:startY="36"
+                android:endX="54"
+                android:endY="76">
+                <item
+                    android:offset="0"
+                    android:color="#FFFFFFFF" />
+                <item
+                    android:offset="1"
+                    android:color="#FFE3ECFF" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- 文件夹顶部的折角高光 -->
+    <path
+        android:fillColor="#B3FFFFFF"
+        android:pathData="M33,36 H46.5 L51,42 H33 A6,6 0 0 0 27,48 V42 A6,6 0 0 1 33,36 Z" />
+    <!-- 向下的箭头：下载 / 取用 -->
+    <path
+        android:pathData="M50,48 H58 V58 H64 L54,69 L44,58 H50 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="54"
+                android:startY="48"
+                android:endX="54"
+                android:endY="69">
+                <item
+                    android:offset="0"
+                    android:color="#FF4C79EB" />
+                <item
+                    android:offset="1"
+                    android:color="#FF2C4FC4" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

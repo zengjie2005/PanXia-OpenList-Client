@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF000000">
+
+    <TextView
+        android:id="@+id/tvAudio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="♪"
+        android:textColor="#FF6E8BB5"
+        android:textSize="96sp"
+        android:visibility="gone" />
+
+    <VideoView
+        android:id="@+id/video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:textColor="#FFFF8A8A"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="#B3000000"
+        android:gravity="center_vertical"
+        android:minHeight="56dp"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="44dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_ripple"
+            android:clickable="true"
+            android:contentDescription="返回"
+            android:focusable="true"
+            android:padding="11dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_back"
+            android:tint="#FFFFFFFF" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingRight="6dp">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.012"
+                android:singleLine="true"
+                android:textColor="#FFFFFFFF"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvSub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:letterSpacing="0.02"
+                android:singleLine="true"
+                android:textColor="#B3FFFFFF"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btnRotate"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/bg_bar_pill"
+            android:clickable="true"
+            android:contentDescription="切换横竖屏"
+            android:focusable="true"
+            android:gravity="center"
+            android:minWidth="52dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="横屏"
+            android:textColor="#FFFFFFFF"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/btnSave"
+            android:layout_width="44dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_ripple"
+            android:clickable="true"
+            android:contentDescription="保存到本机"
+            android:focusable="true"
+            android:padding="11dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_download"
+            android:tint="#FFFFFFFF" />
+    </LinearLayout>
+</FrameLayout>
