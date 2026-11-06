@@ -219,4 +219,29 @@ public final class Ui {
         int i = path.lastIndexOf('/');
         return i < 0 ? path : path.substring(i + 1);
     }
+
+    // ---------------------------------------------------------------- 播放器
+
+    /** 播放器上的时间：mm:ss，超过一小时显示 h:mm:ss */
+    public static String clock(long ms) {
+        if (ms < 0) {
+            ms = 0;
+        }
+        long total = ms / 1000;
+        long h = total / 3600;
+        long m = (total % 3600) / 60;
+        long s = total % 60;
+        if (h > 0) {
+            return String.format(java.util.Locale.US, "%d:%02d:%02d", h, m, s);
+        }
+        return String.format(java.util.Locale.US, "%02d:%02d", m, s);
+    }
+
+    /** 音乐封面按文件名散列取色，每首歌的底色都不一样 */
+    public static int coverTint(String name) {
+        int h = name == null ? 0 : name.hashCode();
+        int[] hues = {212, 190, 158, 268, 336, 24, 96};
+        float hue = hues[Math.abs(h) % hues.length];
+        return android.graphics.Color.HSVToColor(new float[]{hue, 0.42f, 0.55f});
+    }
 }

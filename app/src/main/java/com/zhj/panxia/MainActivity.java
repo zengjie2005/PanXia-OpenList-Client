@@ -718,9 +718,32 @@ public class MainActivity extends Activity {
     }
 
     private void openMedia(Api.Entry e) {
-        Intent i = new Intent(this, MediaActivity.class);
-        i.putExtra(MediaActivity.EXTRA_DIR, path);
-        i.putExtra(MediaActivity.EXTRA_NAME, e.name);
+        boolean audio = Mime.kind(e.name) == Mime.Kind.AUDIO;
+        // 同一目录里的同类文件一起带过去：视频能连着播下一集，音乐整个文件夹就是歌单
+        List<String> siblings = new ArrayList<>();
+        int at = 0;
+        for (Api.Entry x : adapter.items()) {
+            if (x.dir) {
+                continue;
+            }
+            Mime.Kind k = Mime.kind(x.name);
+            boolean same = audio ? k == Mime.Kind.AUDIO : k == Mime.Kind.VIDEO;
+            if (!same) {
+                continue;
+            }
+            if (x.name.equals(e.name)) {
+                at = siblings.size();
+            }
+            siblings.add(x.name);
+        }
+        if (siblings.isEmpty()) {
+            siblings.add(e.name);
+            at = 0;
+        }
+        Intent i = new Intent(this, audio ? MusicActivity.class : VideoActivity.class);
+        i.putExtra(VideoActivity.EXTRA_DIR, path);
+        i.putExtra(VideoActivity.EXTRA_NAMES, siblings.toArray(new String[0]));
+        i.putExtra(VideoActivity.EXTRA_INDEX, at);
         startActivity(i);
     }
 

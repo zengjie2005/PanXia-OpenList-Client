@@ -47,9 +47,17 @@
             android:exported="false" />
 
         <activity
-            android:name=".MediaActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="false" />
+            android:name=".VideoActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize"
+            android:exported="false"
+            android:theme="@style/AppThemeDark" />
+
+        <activity
+            android:name=".MusicActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeDark" />
 
         <activity
             android:name=".TextViewerActivity"

@@ -25,6 +25,7 @@ public class Store {
     private static final String FILE = "openlist_prefs";
     private static final String K_SERVERS = "servers";
     private static final String K_ACTIVE = "active";
+    private static final String K_RESUME = "resume";
 
     /** 一台已保存的服务器 */
     public static class Server {
@@ -382,6 +383,78 @@ public class Store {
 
     public void desc(boolean v) {
         p.edit().putBoolean("desc", v).apply();
+    }
+
+    // ---------------------------------------------------------------- 播放器
+
+    /** 上次的倍速，播放器之间共用 */
+    public float speed() {
+        return p.getFloat("speed", 1f);
+    }
+
+    public void speed(float v) {
+        p.edit().putFloat("speed", v).apply();
+    }
+
+    /** 0 顺序 1 列表循环 2 单曲循环 3 随机 */
+    public int loopMode() {
+        return p.getInt("loopMode", 1);
+    }
+
+    public void loopMode(int v) {
+        p.edit().putInt("loopMode", v).apply();
+    }
+
+    /**
+     * 记下某个文件的播放进度。key 带服务器 base，换服务器不会串。
+     */
+    public void resume(String path, long ms) {
+        JSONObject m = resumeMap();
+        try {
+            m.put(base() + "|" + path, ms);
+        } catch (Exception ignored) {
+        }
+        pruneResume(m);
+        p.edit().putString(K_RESUME, m.toString()).apply();
+    }
+
+    public long resumeAt(String path) {
+        return resumeMap().optLong(base() + "|" + path, 0L);
+    }
+
+    public void clearResume(String path) {
+        JSONObject m = resumeMap();
+        m.remove(base() + "|" + path);
+        p.edit().putString(K_RESUME, m.toString()).apply();
+    }
+
+    private JSONObject resumeMap() {
+        try {
+            String raw = p.getString(K_RESUME, "");
+            if (raw == null || raw.isEmpty()) {
+                return new JSONObject();
+            }
+            return new JSONObject(raw);
+        } catch (Exception e) {
+            return new JSONObject();
+        }
+    }
+
+    /** 播放进度只留最近 300 条，避免 preferences 越长越大 */
+    private void pruneResume(JSONObject m) {
+        if (m.length() <= 300) {
+            return;
+        }
+        try {
+            java.util.Iterator<String> it = m.keys();
+            int drop = m.length() - 300;
+            while (it.hasNext() && drop > 0) {
+                it.next();
+                it.remove();
+                drop--;
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     // ---------------------------------------------------------------- 内部
