@@ -12,10 +12,10 @@
         android:layout_height="wrap_content"
         android:background="?attr/olSurface"
         android:gravity="center_vertical"
-        android:minHeight="56dp"
+        android:minHeight="@dimen/topbar_height"
         android:orientation="horizontal"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp">
+        android:paddingLeft="@dimen/space_xs"
+        android:paddingRight="@dimen/space_xs">
 
         <ImageView
             android:id="@+id/btnBack"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingRight="6dp">
+            android:paddingRight="@dimen/space_sm">
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -73,10 +73,10 @@
         android:background="?attr/olBg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="14dp"
-        android:paddingTop="8dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="8dp"
+        android:paddingLeft="@dimen/space_md"
+        android:paddingTop="@dimen/space_sm"
+        android:paddingRight="@dimen/space_sm"
+        android:paddingBottom="@dimen/space_sm"
         android:visibility="gone">
 
         <EditText
@@ -88,23 +88,23 @@
             android:hint="在当前目录中筛选"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="@dimen/space_md"
+            android:paddingRight="@dimen/space_md"
             android:singleLine="true"
             android:textColor="?attr/olText"
             android:textColorHint="?attr/olDim"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_body" />
 
         <ImageView
             android:id="@+id/btnSearchClose"
-            android:layout_width="42dp"
+            android:layout_width="@dimen/touch_min"
             android:layout_height="42dp"
             android:layout_marginLeft="4dp"
             android:background="@drawable/bg_ripple"
             android:clickable="true"
             android:contentDescription="关闭筛选"
             android:focusable="true"
-            android:padding="11dp"
+            android:padding="@dimen/space_md"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_close"
             android:tint="?attr/olDim" />
@@ -114,12 +114,12 @@
     <LinearLayout
         android:id="@+id/barSel"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="52dp"
         android:background="?attr/olSurface2"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="14dp"
-        android:paddingRight="6dp"
+        android:paddingLeft="@dimen/space_md"
+        android:paddingRight="@dimen/space_sm"
         android:visibility="gone">
 
         <TextView
@@ -130,67 +130,67 @@
             android:letterSpacing="0.03"
             android:text="已选 0 项"
             android:textColor="?attr/olText"
-            android:textSize="13sp" />
+            android:textSize="@dimen/text_label" />
 
         <TextView
             android:id="@+id/btnSelAll"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_ripple"
             android:gravity="center"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="@dimen/space_md"
+            android:paddingRight="@dimen/space_md"
             android:text="@string/select_all"
             android:textColor="?attr/olAccent"
-            android:textSize="13sp" />
+            android:textSize="@dimen/text_label" />
 
         <TextView
             android:id="@+id/btnSelCopy"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_ripple"
             android:gravity="center"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="@dimen/space_md"
+            android:paddingRight="@dimen/space_md"
             android:text="复制"
             android:textColor="?attr/olText"
-            android:textSize="13sp" />
+            android:textSize="@dimen/text_label" />
 
         <TextView
             android:id="@+id/btnSelMove"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_ripple"
             android:gravity="center"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="@dimen/space_md"
+            android:paddingRight="@dimen/space_md"
             android:text="移动"
             android:textColor="?attr/olText"
-            android:textSize="13sp" />
+            android:textSize="@dimen/text_label" />
 
         <TextView
             android:id="@+id/btnSelDel"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_ripple"
             android:gravity="center"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="@dimen/space_md"
+            android:paddingRight="@dimen/space_md"
             android:text="@string/delete"
             android:textColor="?attr/olDanger"
-            android:textSize="13sp" />
+            android:textSize="@dimen/text_label" />
 
         <TextView
             android:id="@+id/btnSelCancel"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_ripple"
             android:gravity="center"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="@dimen/space_md"
+            android:paddingRight="@dimen/space_md"
             android:text="@string/cancel"
             android:textColor="?attr/olDim"
-            android:textSize="13sp" />
+            android:textSize="@dimen/text_label" />
     </LinearLayout>
 
     <!-- 面包屑 -->
@@ -208,8 +208,8 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp" />
+            android:paddingLeft="@dimen/space_md"
+            android:paddingRight="@dimen/space_md" />
     </HorizontalScrollView>
 
     <!-- 文件列表 -->
@@ -231,10 +231,10 @@
                 android:divider="@null"
                 android:dividerHeight="0dp"
                 android:listSelector="@android:color/transparent"
-                android:paddingLeft="6dp"
-                android:paddingTop="2dp"
-                android:paddingRight="6dp"
-                android:paddingBottom="8dp"
+                android:paddingLeft="@dimen/space_sm"
+                android:paddingTop="@dimen/space_xs"
+                android:paddingRight="@dimen/space_sm"
+                android:paddingBottom="@dimen/space_sm"
                 android:scrollbarStyle="outsideOverlay"
                 android:scrollbars="vertical" />
         </com.zhj.panxia.PullRefreshLayout>
@@ -257,21 +257,39 @@
                 android:tint="?attr/olDim" />
 
             <TextView
+                android:id="@+id/tvEmptyTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="@dimen/space_md"
                 android:letterSpacing="0.04"
-                android:text="这里什么都没有"
+                android:text="@string/empty_folder"
                 android:textColor="?attr/olText"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_row" />
 
             <TextView
+                android:id="@+id/tvEmptyHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="点下方「上传」放点东西进来"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="@string/empty_folder_hint"
                 android:textColor="?attr/olDim"
-                android:textSize="12sp" />
+                android:textSize="@dimen/text_meta" />
+
+            <TextView
+                android:id="@+id/btnEmptyAction"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/space_lg"
+                android:background="@drawable/bg_state_action"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingLeft="@dimen/space_xl"
+                android:paddingRight="@dimen/space_xl"
+                android:text="@string/retry"
+                android:textColor="?attr/olAccentText"
+                android:textSize="@dimen/text_label"
+                android:visibility="gone" />
         </LinearLayout>
 
         <ProgressBar
@@ -293,7 +311,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/olSurface"
         android:orientation="horizontal"
-        android:paddingTop="2dp"
+        android:paddingTop="@dimen/space_xs"
         android:paddingBottom="2dp">
 
         <LinearLayout
@@ -336,6 +354,20 @@
             <TextView
                 style="@style/BottomLabel"
                 android:text="@string/sort" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnLocal"
+            style="@style/BottomItem">
+
+            <ImageView
+                style="@style/BottomIcon"
+                android:contentDescription="@string/local_files"
+                android:src="@drawable/ic_local" />
+
+            <TextView
+                style="@style/BottomLabel"
+                android:text="@string/local_short" />
         </LinearLayout>
 
         <LinearLayout

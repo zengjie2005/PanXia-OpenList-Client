@@ -185,6 +185,19 @@ public final class Ui {
         }
     }
 
+    /** 本地文件的毫秒时间戳 -> MM-dd HH:mm */
+    public static String time(long millis) {
+        if (millis <= 0) {
+            return "";
+        }
+        try {
+            SimpleDateFormat out = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
+            return out.format(new Date(millis));
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     /** 读取当前主题下某个 attr 的颜色值 */
     public static int color(Context c, int attr) {
         android.util.TypedValue tv = new android.util.TypedValue();

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_row"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/row_min_height"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/space_sm"
+    android:paddingEnd="@dimen/space_xs">
+
+    <ImageView
+        android:id="@+id/tvCheck"
+        android:layout_width="@dimen/row_check"
+        android:layout_height="@dimen/row_check"
+        android:layout_marginEnd="@dimen/space_xs"
+        android:contentDescription="@string/cd_select_state"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_radio"
+        android:tint="?attr/olDim"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="@dimen/row_icon"
+        android:layout_height="@dimen/row_icon"
+        android:layout_marginStart="@dimen/space_xs"
+        android:layout_marginEnd="@dimen/space_md"
+        android:contentDescription="@string/cd_file_type"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_file" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/space_md"
+        android:paddingBottom="@dimen/space_md">
+
+        <TextView
+            android:id="@+id/tvName"
+            style="@style/RowName" />
+
+        <TextView
+            android:id="@+id/tvMeta"
+            style="@style/RowMeta" />
+    </LinearLayout>
+
+    <!-- 点击监听由 LocalAdapter 绑定，行容器已 blocksDescendants，不参与键盘焦点 -->
+    <ImageView
+        android:id="@+id/btnMore"
+        android:layout_width="@dimen/touch_min"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_ripple"
+        android:contentDescription="@string/cd_more_actions"
+        android:focusable="false"
+        android:padding="@dimen/space_md"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_more"
+        android:tint="?attr/olDim" />
+</LinearLayout>

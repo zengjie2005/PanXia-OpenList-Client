@@ -29,6 +29,8 @@ public final class Dl {
         InputStream in = null;
         OutputStream out = null;
         File outFile = null;
+        Uri createdUri = null;
+        boolean ok = false;
         try {
             int code = c.getResponseCode();
             if (code >= 400) {
@@ -42,11 +44,12 @@ public final class Dl {
                 cv.put(MediaStore.Downloads.DISPLAY_NAME, name);
                 cv.put(MediaStore.Downloads.MIME_TYPE, Mime.mime(name));
                 cv.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/PanXia");
-                Uri uri = ctx.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
-                if (uri == null) {
+                createdUri = ctx.getContentResolver()
+                        .insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
+                if (createdUri == null) {
                     throw new Exception("无法创建下载文件");
                 }
-                out = ctx.getContentResolver().openOutputStream(uri);
+                out = ctx.getContentResolver().openOutputStream(createdUri);
             } else {
                 File dir = new File(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DOWNLOADS), "PanXia");
@@ -73,6 +76,7 @@ public final class Dl {
                 }
             }
             out.flush();
+            ok = true;
             return Build.VERSION.SDK_INT >= 29
                     ? "下载/PanXia/" + name
                     : (outFile == null ? name : outFile.getAbsolutePath());
@@ -85,6 +89,19 @@ public final class Dl {
                 }
             }
             c.disconnect();
+            if (!ok) {
+                // 失败或中断：清掉半成品，不在「下载」里留下空壳
+                if (outFile != null) {
+                    //noinspection ResultOfMethodCallIgnored
+                    outFile.delete();
+                }
+                if (createdUri != null) {
+                    try {
+                        ctx.getContentResolver().delete(createdUri, null, null);
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ public final class Lyrics {
     private static final String TAG = "Lyrics";
     private static final String API_GET = "https://lrclib.net/api/get";
     private static final String API_SEARCH = "https://lrclib.net/api/search";
-    private static final String UA = "PanXia/1.1 (Android)";
+    private static final String UA = "PanXia/1.2 (Android)";
 
     public static class Result {
         public final Lrc lrc;

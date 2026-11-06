@@ -9,33 +9,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-/** 文件列表适配器：支持多选、图标区分、右侧 ⋮ 菜单。 */
+/**
+ * 文件列表适配器：支持多选、图标区分、右侧 ⋮ 菜单。
+ *
+ * 1.2 的两处关键修正：
+ * - 行不再自带 OnClickListener，点击 / 长按统一交给 ListView 的
+ *   onItemClick / onItemLongClick，框架会在惯性滚动期间抑制误触。
+ * - 多选集合保存条目对象而不是文件名；数据集一换（刷新、换目录、筛选、
+ *   换服务器）就自动剔除失效项，不会出现"莫名被勾选"。
+ */
 public class FileAdapter extends BaseAdapter {
 
     public interface OnMore {
         void onMore(int position);
     }
 
-    /**
-     * 行点击。直接挂在行 View 上，不依赖 ListView 的 onItemClick，
-     * 这样行内即使挂了触摸动画也不会把点击"吃掉"。
-     */
-    public interface OnRow {
-        void onOpen(int position);
-
-        void onLong(int position);
-    }
-
     private final Context ctx;
     private final List<Api.Entry> items = new ArrayList<>();
-    private final Set<String> selected = new LinkedHashSet<>();
+    private final Set<Api.Entry> selected = new LinkedHashSet<>();
     private boolean selectionMode;
     private OnMore more;
-    private OnRow row;
 
     public FileAdapter(Context c) {
         this.ctx = c;
@@ -45,13 +43,11 @@ public class FileAdapter extends BaseAdapter {
         this.more = l;
     }
 
-    public void setRowListener(OnRow l) {
-        this.row = l;
-    }
-
     public void submit(List<Api.Entry> list) {
         items.clear();
         items.addAll(list);
+        // 只保留仍属于本次数据集的条目，避免刷新 / 筛选 / 换目录后残留勾选
+        selected.retainAll(new HashSet<Api.Entry>(items));
         notifyDataSetChanged();
     }
 
@@ -60,7 +56,7 @@ public class FileAdapter extends BaseAdapter {
     }
 
     public Api.Entry at(int i) {
-        return items.get(i);
+        return i >= 0 && i < items.size() ? items.get(i) : null;
     }
 
     @Override
@@ -70,12 +66,13 @@ public class FileAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return items.get(i);
+        return at(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return i;
+        Api.Entry e = at(i);
+        return e == null ? -1L : e.name.hashCode();
     }
 
     public boolean selectionMode() {
@@ -90,25 +87,35 @@ public class FileAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /** 返回名称集合，供网络批量操作使用 */
     public Set<String> selected() {
-        return selected;
+        Set<String> out = new LinkedHashSet<>();
+        for (Api.Entry e : selected) {
+            out.add(e.name);
+        }
+        return out;
     }
 
     public List<String> selectedNames() {
-        return new ArrayList<>(selected);
+        return new ArrayList<>(selected());
     }
 
-    public void toggle(String name) {
-        if (!selected.remove(name)) {
-            selected.add(name);
+    public int selectedCount() {
+        return selected.size();
+    }
+
+    public void toggle(Api.Entry e) {
+        if (e == null) {
+            return;
+        }
+        if (!selected.remove(e)) {
+            selected.add(e);
         }
         notifyDataSetChanged();
     }
 
     public void selectAll() {
-        for (Api.Entry e : items) {
-            selected.add(e.name);
-        }
+        selected.addAll(items);
         notifyDataSetChanged();
     }
 
@@ -130,55 +137,42 @@ public class FileAdapter extends BaseAdapter {
         }
 
         final Api.Entry e = items.get(position);
-        // 复用的行可能残留上一次按下动画的缩放，先复位，避免"越点越小"或点不到
+        // 复用的行可能残留上一次的缩放动画，先取消再复位
+        if (v.animate() != null) {
+            v.animate().cancel();
+        }
         v.setScaleX(1f);
         v.setScaleY(1f);
         v.setAlpha(1f);
+
         h.name.setText(e.name);
         if (e.dir) {
             h.meta.setText("文件夹" + (e.modified.isEmpty() ? "" : " · " + Ui.time(e.modified)));
             h.icon.setImageResource(R.drawable.ic_folder);
+            h.icon.clearColorFilter();
         } else {
             String t = Ui.time(e.modified);
             h.meta.setText(Ui.size(e.size) + (t.isEmpty() ? "" : " · " + t));
-            h.icon.setImageResource(iconFor(e.name));
+            int icon = iconFor(e.name);
+            h.icon.setImageResource(icon);
+            if (icon == R.drawable.ic_file) {
+                h.icon.setColorFilter(Ui.color(ctx, R.attr.olDim));
+            } else {
+                h.icon.clearColorFilter();
+            }
         }
 
-        boolean picked = selectionMode && selected.contains(e.name);
+        boolean picked = selectionMode && selected.contains(e);
         h.check.setVisibility(selectionMode ? View.VISIBLE : View.GONE);
         h.check.setImageResource(picked ? R.drawable.ic_check_circle : R.drawable.ic_radio);
         h.check.setColorFilter(picked
-                ? resolveColor(R.attr.olAccent)
-                : resolveColor(R.attr.olDim));
-        if (!Boolean.valueOf(picked).equals(v.getTag(R.id.tag_selected))) {
-            v.setTag(R.id.tag_selected, picked);
-            v.setBackgroundResource(picked ? R.drawable.bg_row_selected : R.drawable.bg_row);
-        }
+                ? Ui.color(ctx, R.attr.olAccent)
+                : Ui.color(ctx, R.attr.olDim));
+        v.setBackgroundResource(picked ? R.drawable.bg_row_selected : R.drawable.bg_row);
+        v.setActivated(picked);
         h.more.setVisibility(selectionMode ? View.GONE : View.VISIBLE);
 
-        // 行点击直接挂在行 View 上：不占用 ListView 的 itemClick 判定，
-        // 行内也不再挂 OnTouchListener，避免触摸被"吃掉"导致点不进目录。
         final int pos = position;
-        v.setClickable(true);
-        v.setFocusable(false);
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (row != null) {
-                    row.onOpen(pos);
-                }
-            }
-        });
-        v.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (row != null) {
-                    row.onLong(pos);
-                }
-                return true;
-            }
-        });
-
         h.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,12 +182,6 @@ public class FileAdapter extends BaseAdapter {
             }
         });
         return v;
-    }
-
-    private int resolveColor(int attr) {
-        android.util.TypedValue tv = new android.util.TypedValue();
-        ctx.getTheme().resolveAttribute(attr, tv, true);
-        return tv.data;
     }
 
     private static int iconFor(String name) {

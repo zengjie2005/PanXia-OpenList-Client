@@ -173,7 +173,7 @@ public class Api {
         c.setReadTimeout(180000);
         c.setInstanceFollowRedirects(true);
         c.setRequestProperty("Accept", json ? "application/json" : "*/*");
-        c.setRequestProperty("User-Agent", "OpenListMobile/1.0 (Android)");
+        c.setRequestProperty("User-Agent", "PanXia/1.2 (Android)");
         if (token != null && !token.isEmpty()) {
             c.setRequestProperty("Authorization", token);
         }
@@ -476,8 +476,10 @@ public class Api {
             c.setRequestProperty("As-Task", "false");
             c.setFixedLengthStreamingMode(length);
 
-            OutputStream out = c.getOutputStream();
-            byte[] buf = new byte[64 * 1024];
+            OutputStream out = null;
+            try {
+                out = c.getOutputStream();
+                byte[] buf = new byte[64 * 1024];
             long sent = 0;
             int n;
             while ((n = in.read(buf)) != -1) {
@@ -494,8 +496,15 @@ public class Api {
                     progress.onProgress(sent, length);
                 }
             }
-            out.flush();
-            out.close();
+                out.flush();
+            } finally {
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException ignored) {
+                    }
+                }
+            }
 
             int sc = c.getResponseCode();
             InputStream ris = sc >= 400 ? c.getErrorStream() : c.getInputStream();

@@ -85,6 +85,7 @@ public class MainActivity extends Activity {
     private boolean pendingMove;
 
     private long lastBackTime;
+    private volatile long loadSeq;
 
     // ------------------------------------------------------------ 生命周期
 
@@ -169,18 +170,20 @@ public class MainActivity extends Activity {
         });
         list.setAdapter(adapter);
 
-        adapter.setRowListener(new FileAdapter.OnRow() {
+        // 点击 / 长按交给 ListView：框架在惯性滚动期间会抑制误触，
+        // 行内不再挂任何点击/触摸监听，快速滑动时不会"蹭"开文件。
+        list.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
             @Override
-            public void onOpen(int position) {
+            public void onItemClick(android.widget.AdapterView<?> parent, View v,
+                                    int position, long id) {
                 if (position < 0 || position >= adapter.getCount()) {
                     return;
                 }
-                Api.Entry e = adapter.at(position);
-                View v = rowViewAt(position);
+                final Api.Entry e = adapter.at(position);
                 Feedback.tick(v);
                 Feedback.pulse(v);
                 if (adapter.selectionMode()) {
-                    adapter.toggle(e.name);
+                    adapter.toggle(e);
                     updateSelBar();
                     return;
                 }
@@ -190,18 +193,21 @@ public class MainActivity extends Activity {
                     open(e);
                 }
             }
-
+        });
+        list.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {
             @Override
-            public void onLong(int position) {
+            public boolean onItemLongClick(android.widget.AdapterView<?> parent, View v,
+                                           int position, long id) {
                 if (position < 0 || position >= adapter.getCount()) {
-                    return;
+                    return true;
                 }
-                Feedback.tick(rowViewAt(position));
+                Feedback.tick(v);
                 if (!adapter.selectionMode()) {
                     adapter.setSelectionMode(true);
                 }
-                adapter.toggle(adapter.at(position).name);
+                adapter.toggle(adapter.at(position));
                 updateSelBar();
+                return true;
             }
         });
 
@@ -242,6 +248,13 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 load(path);
+            }
+        });
+        findViewById(R.id.btnLocal).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Feedback.press(v);
+                startActivity(new Intent(MainActivity.this, LocalFilesActivity.class));
             }
         });
         findViewById(R.id.btnMore).setOnClickListener(new View.OnClickListener() {
@@ -388,42 +401,58 @@ public class MainActivity extends Activity {
 
     /** @param fromPull 下拉刷新触发时不显示居中加载圈，改用顶部指示器 */
     private void load(final String target, final boolean fromPull) {
+        final long seq = ++loadSeq;
+        // 刷新 / 换目录 / 换服务器一律退出多选，操作栏不会残留上一目录的勾选
+        if (adapter.selectionMode()) {
+            adapter.setSelectionMode(false);
+        }
+        updateSelBar();
         if (!fromPull) {
             loading.setVisibility(View.VISIBLE);
         }
         new Thread(new Runnable() {
             @Override
             public void run() {
+                List<Api.Entry> items = null;
+                Throwable error = null;
                 try {
-                    final List<Api.Entry> items = api.list(target);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            loading.setVisibility(View.GONE);
-                            finishRefresh();
-                            path = target;
-                            store.lastPath(target);
-                            all.clear();
-                            all.addAll(items);
-                            tvTitle.setText("/".equals(target) ? "根目录" : Ui.name(target));
-                            render();
-                            updateCrumb();
-                            updateBackButton();
-                            if (!fromPull) {
-                                list.setSelection(0);
-                            }
-                        }
-                    });
-                } catch (final Api.ApiError e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            loading.setVisibility(View.GONE);
-                            finishRefresh();
-                            onError(e);
-                        }
-                    });
+                    items = api.list(target);
+                } catch (Throwable t) {
+                    error = t;
                 }
+                final List<Api.Entry> result = items;
+                final Throwable err = error;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (seq != loadSeq) {
+                            return; // 快速切换目录时丢弃过期结果
+                        }
+                        loading.setVisibility(View.GONE);
+                        finishRefresh();
+                        if (err != null) {
+                            if (err instanceof Api.ApiError) {
+                                onError((Api.ApiError) err);
+                            } else {
+                                Ui.toastLong(MainActivity.this, "加载失败："
+                                        + (err.getMessage() == null ? "未知错误" : err.getMessage()));
+                            }
+                            showLoadErrorIfEmpty();
+                            return;
+                        }
+                        path = target;
+                        store.lastPath(target);
+                        all.clear();
+                        all.addAll(result);
+                        tvTitle.setText("/".equals(target) ? "根目录" : Ui.name(target));
+                        render();
+                        updateCrumb();
+                        updateBackButton();
+                        if (!fromPull) {
+                            list.setSelection(0);
+                        }
+                    }
+                });
             }
         }).start();
     }
@@ -477,6 +506,22 @@ public class MainActivity extends Activity {
 
         adapter.submit(view);
         empty.setVisibility(view.isEmpty() ? View.VISIBLE : View.GONE);
+        if (view.isEmpty()) {
+            TextView title = empty.findViewById(R.id.tvEmptyTitle);
+            TextView hint = empty.findViewById(R.id.tvEmptyHint);
+            View action = empty.findViewById(R.id.btnEmptyAction);
+            if (title != null) {
+                title.setText(query != null && !query.trim().isEmpty()
+                        ? "没有匹配的文件" : getString(R.string.empty_folder));
+            }
+            if (hint != null) {
+                hint.setText(query != null && !query.trim().isEmpty()
+                        ? "换个关键词试试" : getString(R.string.empty_folder_hint));
+            }
+            if (action != null) {
+                action.setVisibility(View.GONE);
+            }
+        }
         tvSub.setText(store.user() + " · " + Api.hostOf(store.base()) + " · " + view.size() + " 项");
     }
 
@@ -541,8 +586,43 @@ public class MainActivity extends Activity {
     private void updateSelBar() {
         boolean on = adapter.selectionMode();
         barSel.setVisibility(on ? View.VISIBLE : View.GONE);
-        tvSelCount.setText("已选 " + adapter.selected().size() + " 项");
-        adapter.notifyDataSetChanged();
+        int n = adapter.selectedCount();
+        tvSelCount.setText(n == 0 ? "未选择" : "已选 " + n + " 项");
+        boolean has = n > 0;
+        int[] actions = {R.id.btnSelCopy, R.id.btnSelMove, R.id.btnSelDel};
+        for (int id : actions) {
+            View v = findViewById(id);
+            if (v != null) {
+                v.setEnabled(has);
+                v.setAlpha(has ? 1f : 0.38f);
+            }
+        }
+    }
+
+    /** 加载失败且列表为空时，给一个看得见、能点的错误态，而不是只弹 toast */
+    private void showLoadErrorIfEmpty() {
+        if (adapter.getCount() > 0) {
+            return;
+        }
+        empty.setVisibility(View.VISIBLE);
+        TextView title = empty.findViewById(R.id.tvEmptyTitle);
+        TextView hint = empty.findViewById(R.id.tvEmptyHint);
+        View action = empty.findViewById(R.id.btnEmptyAction);
+        if (title != null) {
+            title.setText("加载失败");
+        }
+        if (hint != null) {
+            hint.setText("检查网络或服务器地址后重试");
+        }
+        if (action != null) {
+            action.setVisibility(View.VISIBLE);
+            action.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    load(path);
+                }
+            });
+        }
     }
 
     // ------------------------------------------------------------ 菜单
@@ -550,6 +630,7 @@ public class MainActivity extends Activity {
     private void showMoreMenu(View anchor) {
         PopupMenu pm = new PopupMenu(this, anchor);
         pm.getMenu().add("刷新");
+        pm.getMenu().add("本地文件");
         pm.getMenu().add("上传文件");
         pm.getMenu().add("新建文件夹");
         pm.getMenu().add("回到根目录");
@@ -562,6 +643,8 @@ public class MainActivity extends Activity {
                 String title = item.getTitle().toString();
                 if ("刷新".equals(title)) {
                     load(path);
+                } else if ("本地文件".equals(title)) {
+                    startActivity(new Intent(MainActivity.this, LocalFilesActivity.class));
                 } else if ("上传文件".equals(title)) {
                     pickFiles();
                 } else if ("新建文件夹".equals(title)) {
@@ -642,6 +725,10 @@ public class MainActivity extends Activity {
                 .setItems(ops.toArray(new String[0]), new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface d, int i) {
+                        if (!all.contains(e)) {
+                            Ui.toast(MainActivity.this, "列表已变化，请重新选择文件");
+                            return;
+                        }
                         String op = ops.get(i);
                         if ("预览图片".equals(op) || "播放视频".equals(op) || "播放音频".equals(op)
                                 || "查看内容".equals(op) || "打开".equals(op)) {
@@ -1246,6 +1333,7 @@ public class MainActivity extends Activity {
                 OutputStream out = null;
                 Uri outUri = null;
                 File outFile = null;
+                boolean ok = false;
                 try {
                     String raw = api.rawUrl(Ui.join(path, e.name));
                     if (raw.isEmpty()) {
@@ -1254,7 +1342,7 @@ public class MainActivity extends Activity {
                     c = (HttpURLConnection) new URL(raw).openConnection();
                     c.setConnectTimeout(15000);
                     c.setReadTimeout(180000);
-                    c.setRequestProperty("User-Agent", "OpenListMobile/1.0");
+                    c.setRequestProperty("User-Agent", "PanXia/1.2 (Android)");
                     int sc = c.getResponseCode();
                     if (sc >= 400) {
                         throw new Api.ApiError(sc, "下载失败（HTTP " + sc + "）");
@@ -1267,7 +1355,7 @@ public class MainActivity extends Activity {
                         ContentValues cv = new ContentValues();
                         cv.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
                         cv.put(MediaStore.Downloads.MIME_TYPE, "application/octet-stream");
-                        cv.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/OpenList");
+                        cv.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/PanXia");
                         outUri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cv);
                         if (outUri == null) {
                             throw new Api.ApiError(-1, "无法创建下载文件");
@@ -1275,7 +1363,7 @@ public class MainActivity extends Activity {
                         out = getContentResolver().openOutputStream(outUri);
                     } else {
                         File dir = new File(Environment.getExternalStoragePublicDirectory(
-                                Environment.DIRECTORY_DOWNLOADS), "OpenList");
+                                Environment.DIRECTORY_DOWNLOADS), "PanXia");
                         if (!dir.exists() && !dir.mkdirs()) {
                             throw new Api.ApiError(-1, "无法创建下载目录");
                         }
@@ -1308,9 +1396,10 @@ public class MainActivity extends Activity {
                         }
                     }
                     out.flush();
+                    ok = true;
 
                     final String where = Build.VERSION.SDK_INT >= 29
-                            ? "下载/OpenList/" + e.name
+                            ? "下载/PanXia/" + e.name
                             : (outFile == null ? e.name : outFile.getAbsolutePath());
                     runOnUiThread(new Runnable() {
                         @Override
@@ -1342,6 +1431,19 @@ public class MainActivity extends Activity {
                         }
                     });
                 } finally {
+                    if (!ok) {
+                        // 取消或失败时清掉半成品，避免「下载」目录里留下空壳
+                        if (outFile != null) {
+                            //noinspection ResultOfMethodCallIgnored
+                            outFile.delete();
+                        }
+                        if (outUri != null) {
+                            try {
+                                getContentResolver().delete(outUri, null, null);
+                            } catch (Exception ignored) {
+                            }
+                        }
+                    }
                     try {
                         if (in != null) {
                             in.close();
@@ -1573,10 +1675,12 @@ public class MainActivity extends Activity {
     private File cacheCopy(Uri uri) {
         InputStream in = null;
         FileOutputStream out = null;
+        File f = null;
         try {
-            File f = new File(getCacheDir(), "upload_" + System.currentTimeMillis() + ".bin");
+            f = new File(getCacheDir(), "upload_" + System.currentTimeMillis() + ".bin");
             in = getContentResolver().openInputStream(uri);
             if (in == null) {
+                f.delete();
                 return null;
             }
             out = new FileOutputStream(f);
@@ -1588,6 +1692,10 @@ public class MainActivity extends Activity {
             out.flush();
             return f;
         } catch (Exception e) {
+            if (f != null) {
+                //noinspection ResultOfMethodCallIgnored
+                f.delete();
+            }
             return null;
         } finally {
             try {

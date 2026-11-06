@@ -47,6 +47,7 @@ public class PullRefreshLayout extends FrameLayout {
     private boolean refreshing;
 
     private long refreshStart;
+    private Runnable settleReset;
 
     private final Runnable timeoutReset = new Runnable() {
         @Override
@@ -140,7 +141,10 @@ public class PullRefreshLayout extends FrameLayout {
         refreshing = false;
         removeCallbacks(timeoutReset);
         long wait = Math.max(0L, 420L - (System.currentTimeMillis() - refreshStart));
-        postDelayed(new Runnable() {
+        if (settleReset != null) {
+            removeCallbacks(settleReset);
+        }
+        settleReset = new Runnable() {
             @Override
             public void run() {
                 arrow.setVisibility(VISIBLE);
@@ -148,7 +152,8 @@ public class PullRefreshLayout extends FrameLayout {
                 arrow.setRotation(0f);
                 settle();
             }
-        }, wait);
+        };
+        postDelayed(settleReset, wait);
     }
 
     // ---------------------------------------------------------------- 手势
@@ -199,6 +204,15 @@ public class PullRefreshLayout extends FrameLayout {
                 }
                 return false;
             }
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                dragging = false;
+                horizontal = false;
+                return false;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                // 多指手势一律放行，不接管，避免与缩放等操作抢事件
+                horizontal = true;
+                return false;
             default:
                 return false;
         }
@@ -210,6 +224,8 @@ public class PullRefreshLayout extends FrameLayout {
             case MotionEvent.ACTION_DOWN:
                 downX = e.getX();
                 downY = e.getY();
+                dragging = false;
+                horizontal = false;
                 return true;
             case MotionEvent.ACTION_MOVE: {
                 if (refreshing) {
@@ -289,6 +305,9 @@ public class PullRefreshLayout extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         removeCallbacks(timeoutReset);
+        if (settleReset != null) {
+            removeCallbacks(settleReset);
+        }
         super.onDetachedFromWindow();
     }
 

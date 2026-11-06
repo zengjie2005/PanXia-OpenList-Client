@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 /** 直链下载 / 文本读取 / 图片解码（直链是带 sign 的，不需要再带认证头）。 */
 public final class Net {
 
-    private static final String UA = "PanXia/1.1 (Android)";
+    private static final String UA = "PanXia/1.2 (Android)";
 
     public interface Progress {
         void onProgress(long done, long total);
