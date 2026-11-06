@@ -13,6 +13,7 @@ onItemClick 会完全不回调 —— 表现为「顶栏/底栏按钮正常，�
   2. 行布局不得出现 focusable="true" / focusableInTouchMode="true"
   3. FileAdapter 必须提供行内点击通道（v.setOnClickListener + setOnRow 回调）
   4. MainActivity 不得只依赖 setOnItemClickListener
+  5. VideoActivity 手势必须消费 ACTION_DOWN，并提供横向拖动快进/快退
 """
 import glob
 import io
@@ -63,6 +64,27 @@ main = io.open(os.path.join(JAVA, 'MainActivity.java'), encoding='utf-8').read()
 check('MainActivity 使用行内监听',
       'setRowListener' in main and 'setOnItemClickListener' not in main,
       'adapter.setRowListener')
+
+
+# ---- 播放器手势通道 ----
+video = io.open(os.path.join(JAVA, 'VideoActivity.java'), encoding='utf-8').read()
+m = re.search(r'public boolean onDown\(MotionEvent e\)\s*\{(.*?)\n            \}', video, re.S)
+check('VideoActivity 消费 ACTION_DOWN',
+      m is not None and 'return true' in m.group(1),
+      'onDown() 返回 true（否则单击/双击/拖动全部收不到）')
+check('VideoActivity videoBox 可点击兜底',
+      'box.setClickable(true)' in video, 'box.setClickable(true)')
+check('VideoActivity 单击可呼出控制栏',
+      'setControls(!controlsVisible)' in video, 'onSingleTapConfirmed → setControls')
+check('VideoActivity 横向拖动跳转',
+      'public boolean onScroll(' in video and 'dragTarget' in video,
+      'onScroll 换算目标时间')
+check('VideoActivity 松手才生效、取消不跳转',
+      'finishDragSeek(action == MotionEvent.ACTION_UP)' in video
+      and 'finishDragSeek(boolean apply)' in video,
+      'ACTION_UP 应用 / ACTION_CANCEL 放弃')
+check('VideoActivity 拖动中不自动隐藏控制栏',
+      'ui.removeCallbacks(hideControls)' in video, 'onScroll 暂停隐藏计时')
 
 failed = [r for r in results if not r[1]]
 for name, ok, detail in results:

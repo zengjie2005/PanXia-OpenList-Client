@@ -36,6 +36,8 @@ public class VideoActivity extends Activity
     public static final String EXTRA_INDEX = "index";
 
     private static final long HIDE_DELAY = 4000;
+    /** 横向拖过整个屏宽对应的跳转时长上限；短视频按比例自动缩短 */
+    private static final long DRAG_SEEK_SPAN = 120000L;
     private static final float[] SPEEDS = {0.75f, 1f, 1.25f, 1.5f, 2f};
     private static final String[] SPEED_LABELS = {"0.75×", "1.0×", "1.25×", "1.5×", "2.0×"};
 
@@ -63,6 +65,9 @@ public class VideoActivity extends Activity
     private int videoH;
     private long lastSeekAt;
     private int seekStep;
+    private boolean dragSeeking;
+    private long dragStartPos;
+    private long dragTarget;
 
     private FrameLayout box;
     private SurfaceView surface;
@@ -237,6 +242,64 @@ public class VideoActivity extends Activity
         seek.setOnSeekListener(this);
         gestures = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
+            public boolean onDown(MotionEvent e) {
+                // 必须消费 ACTION_DOWN：SimpleOnGestureListener 默认返回 false，
+                // 一旦 DOWN 没被消费，后续 MOVE/UP 就不会再派发给 box，
+                // onSingleTapConfirmed / onDoubleTap 永远不会触发
+                // （表现为控制栏自动隐藏后单击画面无法呼出）。
+                dragSeeking = false;
+                return true;
+            }
+
+            /** 横向拖动：按位移换算跳转时间，松手才真正 seek */
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2,
+                                    float distanceX, float distanceY) {
+                if (mp == null || !prepared || dragging || e1 == null || e2 == null) {
+                    return false;
+                }
+                float dx = e2.getX() - e1.getX();
+                float dy = e2.getY() - e1.getY();
+                if (!dragSeeking) {
+                    // 竖向手势暂不接管，留给系统 / 后续亮度音量扩展
+                    if (Math.abs(dx) <= Math.abs(dy)) {
+                        return false;
+                    }
+                    dragSeeking = true;
+                    try {
+                        dragStartPos = mp.getCurrentPosition();
+                    } catch (Exception ex) {
+                        dragSeeking = false;
+                        return false;
+                    }
+                    ui.removeCallbacks(hideControls);
+                }
+                long dur = 0;
+                try {
+                    dur = mp.getDuration();
+                } catch (Exception ignored) {
+                }
+                long span = dur > 0
+                        ? Math.min(DRAG_SEEK_SPAN, Math.max(30000L, dur / 3))
+                        : DRAG_SEEK_SPAN;
+                long delta = (long) (dx / Math.max(1, box.getWidth()) * span);
+                long target = dragStartPos + delta;
+                if (target < 0) {
+                    target = 0;
+                }
+                if (dur > 0 && target > dur - 1000) {
+                    target = Math.max(0, dur - 1000);
+                }
+                dragTarget = target;
+                String text = (delta >= 0 ? "+" : "-") + Ui.clock(Math.abs(delta))
+                        + "\n" + Ui.clock(target) + " / " + Ui.clock(dur);
+                tvSkip.setText(text);
+                tvSkip.animate().cancel();
+                tvSkip.setAlpha(1f);
+                return true;
+            }
+
+            @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 box.performClick();
                 setControls(!controlsVisible);
@@ -256,10 +319,19 @@ public class VideoActivity extends Activity
                 return true;
             }
         });
+        // clickable 兜底：即使手势判定漏掉 DOWN，box 也会消费它，
+        // 保证后续 MOVE / UP 继续派发到这里
+        box.setClickable(true);
         box.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent e) {
-                return gestures.onTouchEvent(e);
+                boolean handled = gestures.onTouchEvent(e);
+                int action = e.getActionMasked();
+                if (action == MotionEvent.ACTION_UP
+                        || action == MotionEvent.ACTION_CANCEL) {
+                    finishDragSeek(action == MotionEvent.ACTION_UP);
+                }
+                return handled || action == MotionEvent.ACTION_DOWN;
             }
         });
         box.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -503,6 +575,27 @@ public class VideoActivity extends Activity
         }
         setControls(true);
         load(i, false);
+    }
+
+    /** 横向拖动结束：确认才跳转，取消（手指滑出 / 来电等）不改动播放位置 */
+    private void finishDragSeek(boolean apply) {
+        if (!dragSeeking) {
+            return;
+        }
+        dragSeeking = false;
+        if (apply && mp != null && prepared) {
+            try {
+                mp.seekTo((int) dragTarget);
+                updateProgress();
+            } catch (Exception ignored) {
+            }
+        }
+        tvSkip.animate().cancel();
+        tvSkip.animate().alpha(0f).setDuration(280).start();
+        if (controlsVisible && isPlaying()) {
+            ui.removeCallbacks(hideControls);
+            ui.postDelayed(hideControls, HIDE_DELAY);
+        }
     }
 
     private void seekRelative(int delta) {
