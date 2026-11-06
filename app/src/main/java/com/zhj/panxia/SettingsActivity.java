@@ -190,9 +190,21 @@ public class SettingsActivity extends Activity {
             tvServerName.setText(s.label());
             tvServerBase.setText(s.base + (s.user.isEmpty() ? "" : " · " + s.user));
         }
-        tvAbout.setText("盘匣 1.0\n作者 zhj · 兼容 OpenList v4 API\n"
+        String ver = appVersion();
+        tvAbout.setText("盘匣" + (ver.isEmpty() ? "" : " " + ver)
+                + "\n作者 zhj · 兼容 OpenList v4 API\n"
                 + (s == null ? "" : "当前 " + Api.label(s.base) + "\n")
                 + "凭据仅保存在本机，不上传任何服务器");
+    }
+
+    /** 版本号取自 PackageInfo，以后改 build.gradle 时关于页自动跟着变 */
+    private String appVersion() {
+        try {
+            String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            return v == null ? "" : v;
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     private void setThemeMode(int mode) {

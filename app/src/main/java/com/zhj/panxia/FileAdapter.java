@@ -17,9 +17,13 @@ import java.util.Set;
 /**
  * 文件列表适配器：支持多选、图标区分、右侧 ⋮ 菜单。
  *
- * 1.2 的两处关键修正：
- * - 行不再自带 OnClickListener，点击 / 长按统一交给 ListView 的
- *   onItemClick / onItemLongClick，框架会在惯性滚动期间抑制误触。
+ * 点击通道（1.2 修复，勿改回去）：
+ * - 点击 / 长按由行 View 自己的监听器处理（1.0 / 1.1 真机验证过的路径）。
+ *   绝不能只依赖 ListView.onItemClick：只要行里存在可获焦子控件（例如 ⋮
+ *   按钮设了 focusable=true），AbsListView 就判定整行不可点击，完全不回调
+ *   onItemClick —— 1.2 首版整个列表点不动就是这个原因。
+ * - 行容器强制 FOCUS_BLOCK_DESCENDANTS，⋮ 按钮强制不可获焦，双重防护。
+ * - 行内绝不用 OnTouchListener 做按压动画，那会和 ListView 抢触摸事件。
  * - 多选集合保存条目对象而不是文件名；数据集一换（刷新、换目录、筛选、
  *   换服务器）就自动剔除失效项，不会出现"莫名被勾选"。
  */
@@ -29,11 +33,18 @@ public class FileAdapter extends BaseAdapter {
         void onMore(int position);
     }
 
+    /** 行点击 / 长按：由行 View 自己处理，不依赖 AbsListView 的 onItemClick */
+    public interface OnRow {
+        void onClick(int position, View row);
+        boolean onLongClick(int position, View row);
+    }
+
     private final Context ctx;
     private final List<Api.Entry> items = new ArrayList<>();
     private final Set<Api.Entry> selected = new LinkedHashSet<>();
     private boolean selectionMode;
     private OnMore more;
+    private OnRow row;
 
     public FileAdapter(Context c) {
         this.ctx = c;
@@ -41,6 +52,10 @@ public class FileAdapter extends BaseAdapter {
 
     public void setMoreListener(OnMore l) {
         this.more = l;
+    }
+
+    public void setRowListener(OnRow l) {
+        this.row = l;
     }
 
     public void submit(List<Api.Entry> list) {
@@ -136,6 +151,13 @@ public class FileAdapter extends BaseAdapter {
             h = (Holder) v.getTag();
         }
 
+        // 行内一旦存在可获焦子控件，AbsListView 会认为整行不可点击。
+        // 这里连同 XML 一起强制阻断后代焦点，避免再次出现整列点不动。
+        if (v instanceof ViewGroup) {
+            ((ViewGroup) v).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        }
+        h.more.setFocusable(false);
+
         final Api.Entry e = items.get(position);
         // 复用的行可能残留上一次的缩放动画，先取消再复位
         if (v.animate() != null) {
@@ -179,6 +201,21 @@ public class FileAdapter extends BaseAdapter {
                 if (more != null) {
                     more.onMore(pos);
                 }
+            }
+        });
+        // 整行的点击 / 长按（主通道）。pos 每次 getView 都重新捕获，复用行不会串位。
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (row != null) {
+                    row.onClick(pos, view);
+                }
+            }
+        });
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return row != null && row.onLongClick(pos, view);
             }
         });
         return v;

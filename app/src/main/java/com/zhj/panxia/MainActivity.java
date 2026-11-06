@@ -170,12 +170,12 @@ public class MainActivity extends Activity {
         });
         list.setAdapter(adapter);
 
-        // 点击 / 长按交给 ListView：框架在惯性滚动期间会抑制误触，
-        // 行内不再挂任何点击/触摸监听，快速滑动时不会"蹭"开文件。
-        list.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+        // 点击 / 长按由行 View 自己处理（FileAdapter.OnRow）。
+        // 不要只依赖 ListView.onItemClick：行内 ⋮ 按钮曾因可获焦导致
+        // AbsListView 判定整行不可点击，整个文件列表点不动。
+        adapter.setRowListener(new FileAdapter.OnRow() {
             @Override
-            public void onItemClick(android.widget.AdapterView<?> parent, View v,
-                                    int position, long id) {
+            public void onClick(int position, View v) {
                 if (position < 0 || position >= adapter.getCount()) {
                     return;
                 }
@@ -193,11 +193,9 @@ public class MainActivity extends Activity {
                     open(e);
                 }
             }
-        });
-        list.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {
+
             @Override
-            public boolean onItemLongClick(android.widget.AdapterView<?> parent, View v,
-                                           int position, long id) {
+            public boolean onLongClick(int position, View v) {
                 if (position < 0 || position >= adapter.getCount()) {
                     return true;
                 }
